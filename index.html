@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>p5.js example</title>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.min.js" integrity="sha512-NxocnqsXP3zm0Xb42zqVMvjQIktKEpTIbCXXyhBPxqGZHqhcOXHs4pXI/GoZ8lE+2NJONRifuBpi9DxC58L0Lw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- <script src="../addons/p5.sound.js"></script> -->
+</head>
+
+<body>
+  <script>
+
+let field = [];
+let mode = 50;
+let checkMode = true;
+
+function setup() {
+  createCanvas(1280, 640);
+  for(let i = 0; i < 32; i++){
+    for(let j = 0; j < 64; j++){
+      field.push(new Cell(j, i));
+    }
+  }
+}
+
+function draw() {
+  background(200);
+  for(c of field){
+    c.draw()
+  }
+  if(mouseIsPressed){
+    field.forEach(function(c) {
+      if(c.containsMouse(mouseX, mouseY)){
+        if(checkMode){
+          if(c.color === mode){
+            invertMode();
+          }
+          checkMode = false;
+        }
+        c.color = mode;
+      }
+    })
+  }else{
+    checkMode = true;
+  }
+}
+
+function invertMode(){
+  if(mode === 50){
+    mode = 200;
+  }else{
+    mode = 50;
+  }
+}
+
+class Cell{
+  constructor(x, y){
+    this.width = 20;
+    this.x = x * this.width;
+    this.y = y * this.width;
+    this.filled = false;
+    this.color = 200;
+  }
+  
+  draw(){
+    stroke(0);
+    fill(this.color);
+    square(this.x, this.y, this.width);
+  }
+  
+  containsMouse(mX, mY){
+     return (mX >= this.x && mX <= this.x + this.width && mY >= this.y && mY <= this.y + this.width);
+  }
+}
+
+  </script>
+</body>
+
+</html>
